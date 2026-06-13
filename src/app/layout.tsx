@@ -27,7 +27,14 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="flex-1">
+          {children}
+        </div>
+        <footer className="text-center py-8 text-gray-400 text-sm w-full bg-[#f9fafb] relative z-20">
+          © Ugax. Esta plataforma no está vinculada a YouTube.
+        </footer>
+      </body>
     </html>
   );
 }

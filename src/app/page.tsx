@@ -1,64 +1,104 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import UploadForm from "@/components/UploadForm";
+import StatsBanner from "@/components/StatsBanner";
+import { UserPlus, Upload, List, Share2 } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-[#f9fafb] flex flex-col font-sans text-[#0f172a]">
+      <Navbar />
+
+      <main className="flex-1 flex flex-col items-center px-4 pt-16 pb-32">
+        
+        {/* Hero Section */}
+        <div className="text-center w-full max-w-4xl mb-12">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-[#0f172a] leading-tight">
+            Aparece en el canal<br/>de YouTube de todos.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg md:text-xl text-[#4b5563] font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
+            Sube tu vídeo y entrará a una lista de espera. El sistema publicará automáticamente un vídeo al azar en la cuenta comunitaria cada vez que el reloj llegue a cero.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          <a 
+            href="https://www.youtube.com/@losderyutu" 
             target="_blank"
             rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 border border-gray-300 rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            Ver canal de YouTube 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           </a>
         </div>
+
+        {/* Upload Card */}
+        <div className="w-full mb-20 z-10">
+          <UploadForm />
+        </div>
+
+        {/* Stats Section (Subtle Integration) */}
+        <div id="cola" className="w-full max-w-2xl mb-24 opacity-80 hover:opacity-100 transition-opacity scroll-mt-24">
+          <StatsBanner />
+        </div>
+
+        {/* Vertical Steps - Cómo funciona */}
+        <div id="como-funciona" className="w-full max-w-3xl flex flex-col items-center scroll-mt-24">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-bold text-[#0f172a] tracking-tight">Cómo funciona youtubebot</h2>
+            <p className="text-[#4b5563] mt-2">El primer YouTube del mundo gestionado por su propia gente.</p>
+          </div>
+
+          <div className="flex flex-col gap-6 w-full">
+            
+            <div className="bg-white rounded-[2rem] p-8 md:p-10 flex items-start gap-6 float-shadow">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-blue-50 flex items-center justify-center">
+                <UserPlus className="w-6 h-6 text-[#0056b3]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">1. Selecciona tu vídeo</h3>
+                <p className="text-[#4b5563] leading-relaxed">
+                  Elige un vídeo desde tu dispositivo. Asegúrate de que no infrinja las normas de la comunidad para evitar ser penalizado.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-[2rem] p-8 md:p-10 flex items-start gap-6 float-shadow">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-blue-50 flex items-center justify-center">
+                <Upload className="w-6 h-6 text-[#0056b3]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">2. Añade un título y acepta</h3>
+                <p className="text-[#4b5563] leading-relaxed">
+                  Escribe un título llamativo, lee y acepta los términos de uso. Es necesario para mantener el orden en la grada y evitar contenido inapropiado.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-[2rem] p-8 md:p-10 flex items-start gap-6 float-shadow">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-blue-50 flex items-center justify-center">
+                <List className="w-6 h-6 text-[#0056b3]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">3. Directo a la cola</h3>
+                <p className="text-[#4b5563] leading-relaxed">
+                  Una vez enviado, el bot lo pondrá en la lista de espera. Dependiendo del intervalo configurado, el bot selecciona y publica un vídeo.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-[2rem] p-8 md:p-10 flex items-start gap-6 float-shadow">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-blue-50 flex items-center justify-center">
+                <Share2 className="w-6 h-6 text-[#0056b3]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">4. ¡Ya estás en YouTube!</h3>
+                <p className="text-[#4b5563] leading-relaxed">
+                  El vídeo será público para todo el mundo en nuestro canal comunitario. ¡Así de fácil!
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </main>
     </div>
   );
