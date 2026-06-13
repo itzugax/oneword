@@ -57,32 +57,32 @@ export default function StatsBanner() {
         style={{ zIndex: 0 }}
       >
         {/* Centro */}
-        <span className="absolute top-[38%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.05]">
+        <span className="absolute top-[38%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.15]">
           {display}
         </span>
 
         {/* Arriba-izquierda */}
-        <span className="absolute top-[5%] left-[-4%] text-[11vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[12deg]">
+        <span className="absolute top-[5%] left-[-4%] text-[11vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.08] -rotate-[12deg]">
           {display}
         </span>
 
         {/* Arriba-derecha */}
-        <span className="absolute top-[8%] right-[-2%] text-[8vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.02] rotate-[8deg]">
+        <span className="absolute top-[8%] right-[-2%] text-[8vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.07] rotate-[8deg]">
           {display}
         </span>
 
         {/* Abajo-izquierda */}
-        <span className="absolute bottom-[12%] left-[4%] text-[7vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.03] rotate-[25deg]">
+        <span className="absolute bottom-[12%] left-[4%] text-[7vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.09] rotate-[25deg]">
           {display}
         </span>
 
         {/* Abajo-derecha */}
-        <span className="absolute bottom-[8%] right-[2%] text-[10vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[6deg]">
+        <span className="absolute bottom-[8%] right-[2%] text-[10vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.08] -rotate-[6deg]">
           {display}
         </span>
 
         {/* Lateral izquierdo medio */}
-        <span className="absolute top-[62%] left-[-1%] text-[5vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.035] rotate-[40deg]">
+        <span className="absolute top-[62%] left-[-1%] text-[5vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.1] rotate-[40deg]">
           {display}
         </span>
       </div>
