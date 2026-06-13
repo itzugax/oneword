@@ -8,21 +8,21 @@ export default function Home() {
     <div className="min-h-screen bg-[#f9fafb] flex flex-col font-sans text-[#0f172a]">
       <Navbar />
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-16 pb-32">
+      <main className="flex-1 flex flex-col items-center px-4 pt-10 pb-20">
         
         {/* Hero Section */}
-        <div className="text-center w-full max-w-4xl mb-12">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-[#0f172a] leading-tight">
+        <div className="text-center w-full max-w-4xl mb-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3 text-[#0f172a] leading-tight">
             Aparece en el canal<br/>de YouTube de todos.
           </h1>
-          <p className="text-lg md:text-xl text-[#4b5563] font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-[#4b5563] font-medium mb-6 max-w-2xl mx-auto leading-relaxed">
             Sube tu vídeo y entrará a una lista de espera. El sistema publicará automáticamente un vídeo al azar en la cuenta comunitaria cada vez que el reloj llegue a cero.
           </p>
           <a 
             href="https://www.youtube.com/@losderyutu" 
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 border border-gray-300 rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-2 border border-gray-300 rounded-full px-5 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
           >
             Ver canal de YouTube 
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -30,14 +30,11 @@ export default function Home() {
         </div>
 
         {/* Upload Card */}
-        <div className="w-full mb-20 z-10">
+        <div className="w-full mb-16 z-10">
           <UploadForm />
         </div>
 
-        {/* Stats Section (Subtle Integration) */}
-        <div id="cola" className="w-full max-w-2xl mb-24 opacity-80 hover:opacity-100 transition-opacity scroll-mt-24">
-          <StatsBanner />
-        </div>
+        <StatsBanner />
 
         {/* Vertical Steps - Cómo funciona */}
         <div id="como-funciona" className="w-full max-w-3xl flex flex-col items-center scroll-mt-24">

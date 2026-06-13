@@ -131,7 +131,7 @@ export default function UploadForm() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-[2rem] p-10 md:p-14 float-shadow relative overflow-hidden">
+    <div className="w-full max-w-xl mx-auto bg-white rounded-[2rem] p-8 md:p-10 float-shadow relative overflow-hidden">
       
       {status === "validating" && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
@@ -158,13 +158,13 @@ export default function UploadForm() {
           <button 
             type="button"
             onClick={triggerFileSelect}
-            className="w-full max-w-sm bg-[#0056b3] hover:bg-[#004494] text-white rounded-[1.5rem] py-6 px-8 text-2xl font-bold transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-3"
+            className="w-full max-w-sm bg-[#0056b3] hover:bg-[#004494] text-white rounded-[1.5rem] py-4 px-6 text-xl font-bold transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-3"
           >
-            <UploadCloud className="w-8 h-8" />
+            <UploadCloud className="w-7 h-7" />
             Subir Vídeo
           </button>
           
-          <p className="mt-6 text-sm text-gray-400 font-medium tracking-wide">(o arrástralo aquí)</p>
+          <p className="mt-4 text-sm text-gray-400 font-medium tracking-wide">(o arrástralo aquí)</p>
           
           {status === "error" && (
             <div className="mt-6 bg-red-50 text-red-600 border border-red-100 p-4 rounded-xl text-center font-medium shadow-sm w-full">
@@ -231,7 +231,7 @@ export default function UploadForm() {
           <button
             type="submit"
             disabled={!title || !termsAccepted || status === "uploading"}
-            className="w-full bg-[#0056b3] hover:bg-[#004494] text-white rounded-xl py-4 text-xl font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
+            className="w-full bg-[#0056b3] hover:bg-[#004494] text-white rounded-xl py-3.5 text-lg font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
           >
             {/* Barra de progreso de fondo en el botón */}
             {status === "uploading" && (

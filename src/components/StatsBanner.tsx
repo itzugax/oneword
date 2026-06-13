@@ -50,9 +50,22 @@ export default function StatsBanner() {
 
   return (
     <>
-      {/* Reloj Gigante de Fondo */}
+      {/* Relojes Artísticos de Fondo */}
       <div className="fixed inset-0 flex items-center justify-center -z-10 pointer-events-none select-none overflow-hidden">
-        <span className="text-[18vw] md:text-[15vw] font-black text-[#0f172a]/[0.08] tracking-tighter tabular-nums whitespace-nowrap">
+        {/* Principal Central */}
+        <span className="absolute text-[18vw] md:text-[15vw] font-black text-[#0f172a]/[0.05] tracking-tighter tabular-nums whitespace-nowrap">
+          {isLoading ? "--:--" : timeLeft}
+        </span>
+        {/* Esquina superior izquierda */}
+        <span className="absolute top-[-5%] left-[-10%] text-[25vw] md:text-[20vw] font-black text-[#0f172a]/[0.02] tracking-tighter tabular-nums whitespace-nowrap -rotate-12">
+          {isLoading ? "--:--" : timeLeft}
+        </span>
+        {/* Esquina inferior izquierda */}
+        <span className="absolute bottom-[10%] left-[-5%] text-[10vw] font-black text-[#0f172a]/[0.03] tracking-tighter tabular-nums whitespace-nowrap rotate-45">
+          {isLoading ? "--:--" : timeLeft}
+        </span>
+        {/* Derecha medio */}
+        <span className="absolute top-[30%] right-[-15%] text-[30vw] md:text-[25vw] font-black text-[#0f172a]/[0.02] tracking-tighter tabular-nums whitespace-nowrap rotate-12">
           {isLoading ? "--:--" : timeLeft}
         </span>
       </div>
