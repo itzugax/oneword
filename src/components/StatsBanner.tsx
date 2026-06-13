@@ -56,33 +56,33 @@ export default function StatsBanner() {
         className="fixed inset-0 overflow-hidden pointer-events-none select-none"
         style={{ zIndex: 0 }}
       >
-        {/* Centro — el más grande y sutil */}
-        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[22vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.045]">
+        {/* Centro */}
+        <span className="absolute top-[38%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.05]">
           {display}
         </span>
 
-        {/* Arriba-izquierda, inclinado */}
-        <span className="absolute -top-4 -left-8 text-[18vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[15deg]">
+        {/* Arriba-izquierda */}
+        <span className="absolute top-[5%] left-[-4%] text-[11vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[12deg]">
           {display}
         </span>
 
-        {/* Arriba-derecha, inclinado al otro lado */}
-        <span className="absolute -top-6 right-[-12%] text-[14vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.02] rotate-[10deg]">
+        {/* Arriba-derecha */}
+        <span className="absolute top-[8%] right-[-2%] text-[8vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.02] rotate-[8deg]">
           {display}
         </span>
 
-        {/* Abajo-izquierda, pequeño y rotado */}
-        <span className="absolute bottom-[8%] left-[5%] text-[9vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.035] rotate-[30deg]">
+        {/* Abajo-izquierda */}
+        <span className="absolute bottom-[12%] left-[4%] text-[7vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.03] rotate-[25deg]">
           {display}
         </span>
 
-        {/* Abajo-derecha, mediano */}
-        <span className="absolute bottom-[5%] right-[3%] text-[16vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[8deg]">
+        {/* Abajo-derecha */}
+        <span className="absolute bottom-[8%] right-[2%] text-[10vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.025] -rotate-[6deg]">
           {display}
         </span>
 
-        {/* Centro-izquierda, pequeñísimo */}
-        <span className="absolute top-[40%] left-[2%] text-[6vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.04] rotate-[45deg]">
+        {/* Lateral izquierdo medio */}
+        <span className="absolute top-[62%] left-[-1%] text-[5vw] font-black tracking-tighter tabular-nums whitespace-nowrap text-[#0f172a] opacity-[0.035] rotate-[40deg]">
           {display}
         </span>
       </div>

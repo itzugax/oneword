@@ -19,7 +19,7 @@ export default function Home() {
             Sube tu vídeo y entrará a una lista de espera. El sistema publicará automáticamente un vídeo al azar en la cuenta comunitaria cada vez que el reloj llegue a cero.
           </p>
           <a 
-            href="https://www.youtube.com/@losderyutu" 
+            href="https://www.youtube.com/@losderyutu/shorts" 
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border border-gray-300 rounded-full px-5 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
