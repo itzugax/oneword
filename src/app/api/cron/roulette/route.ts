@@ -65,10 +65,25 @@ export async function GET(req: Request) {
     const randomVideo = videos[Math.floor(Math.random() * videos.length)];
 
     // 3. Hacer público el video en YouTube
-    const success = await makeVideoPublic(randomVideo.youtube_video_id);
+    let success = false;
+    try {
+      success = await makeVideoPublic(randomVideo.youtube_video_id);
+    } catch (ytError: any) {
+      console.error('Error de YouTube para el video', randomVideo.youtube_video_id, ytError.message);
+      
+      // Si el video fue borrado o no existe (ej. error 404 de YouTube), lo marcamos como error para no volver a intentarlo
+      await supabaseAdmin
+        .from('videos_ruleta')
+        .update({ estado: 'error_youtube' })
+        .eq('id', randomVideo.id);
+
+      return NextResponse.json({ 
+        message: `El video ${randomVideo.youtube_video_id} dio error en YouTube y fue descartado. Reintentará en el próximo ciclo.` 
+      }, { status: 200 });
+    }
 
     if (!success) {
-      return NextResponse.json({ error: 'Error al cambiar la privacidad en YouTube' }, { status: 500 });
+      return NextResponse.json({ error: 'Error desconocido al cambiar privacidad en YouTube' }, { status: 500 });
     }
 
     // 4. Actualizar estado en Supabase a 'publicado'
