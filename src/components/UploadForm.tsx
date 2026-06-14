@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { UploadCloud, Loader2, Info } from "lucide-react";
+import { UploadCloud, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function UploadForm() {
@@ -21,14 +21,12 @@ export default function UploadForm() {
     setErrorMessage("");
     setFile(null);
 
-    // Validar tipo de archivo
     if (!selectedFile.type.startsWith('video/')) {
       setStatus("error");
       setErrorMessage("Solo se permiten archivos de video.");
       return;
     }
 
-    // Validar video (Duración y Orientación)
     const videoURL = URL.createObjectURL(selectedFile);
     const video = document.createElement('video');
     video.src = videoURL;
@@ -37,21 +35,20 @@ export default function UploadForm() {
       URL.revokeObjectURL(videoURL);
       
       const isVertical = video.videoHeight > video.videoWidth;
-      const isShort = video.duration <= 59.5; // Margen de medio segundo
+      const isShort = video.duration <= 59.5;
 
       if (!isVertical) {
         setStatus("error");
-        setErrorMessage("⚠️ Error: El video debe ser vertical (Formato Short 9:16). No se permiten videos horizontales.");
+        setErrorMessage("⚠️ El video debe ser vertical (formato Short 9:16). Los videos horizontales no están permitidos.");
         return;
       }
 
       if (!isShort) {
         setStatus("error");
-        setErrorMessage(`⚠️ Error: El video dura ${Math.floor(video.duration)}s. El máximo permitido es 59 segundos.`);
+        setErrorMessage(`⚠️ El video dura ${Math.floor(video.duration)}s. El máximo permitido es 59 segundos.`);
         return;
       }
 
-      // Si pasa la validación
       setFile(selectedFile);
       setStatus("idle");
     };
@@ -59,75 +56,109 @@ export default function UploadForm() {
     video.onerror = () => {
       URL.revokeObjectURL(videoURL);
       setStatus("error");
-      setErrorMessage("No se pudo leer el archivo de video. Asegúrate de que no esté corrupto.");
+      setErrorMessage("No se pudo leer el archivo. Asegúrate de que no esté corrupto.");
     };
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFile(e.target.files[0]);
-    }
+    if (e.target.files && e.target.files.length > 0) handleFile(e.target.files[0]);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFile(e.dataTransfer.files[0]);
-    }
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
   };
 
-  const triggerFileSelect = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
+  const triggerFileSelect = () => fileInputRef.current?.click();
 
-  const handleUpload = (e: React.FormEvent) => {
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !title || !termsAccepted) return;
 
     setStatus("uploading");
     setUploadProgress(0);
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
+    try {
+      // PASO 1: Pedir al servidor que inicie la sesión resumable en YouTube
+      const initRes = await fetch('/api/upload/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          fileSize: file.size,
+          mimeType: file.type || 'video/mp4',
+        }),
+      });
 
-    const xhr = new XMLHttpRequest();
-    
-    xhr.upload.addEventListener("progress", (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percentComplete);
+      if (!initRes.ok) {
+        const err = await initRes.json();
+        throw new Error(err.error || 'Error al iniciar la subida.');
       }
-    });
 
-    xhr.addEventListener("load", () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        setStatus("success");
-        setFile(null);
-        setTitle("");
-        setDescription("");
-        setTermsAccepted(false);
-      } else {
-        try {
-          const res = JSON.parse(xhr.responseText);
-          throw new Error(res.error || "Error en el servidor al subir el archivo.");
-        } catch (err: any) {
-          setStatus("error");
-          setErrorMessage(err.message || "Error desconocido al procesar la subida.");
-        }
-      }
-    });
+      const { uploadUrl, finalTitle, finalDescription } = await initRes.json();
 
-    xhr.addEventListener("error", () => {
+      // PASO 2: Subir el video DIRECTO a YouTube desde el navegador (sin pasar por Vercel)
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener("progress", (event) => {
+          if (event.lengthComputable) {
+            setUploadProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        });
+
+        xhr.addEventListener("load", async () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            // Extraer el video ID de la respuesta de YouTube
+            try {
+              const ytResponse = JSON.parse(xhr.responseText);
+              const youtubeVideoId = ytResponse.id;
+
+              if (!youtubeVideoId) {
+                reject(new Error('YouTube no devolvió el ID del video.'));
+                return;
+              }
+
+              // PASO 3: Registrar en Supabase
+              const completeRes = await fetch('/api/upload/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ youtubeVideoId, title: finalTitle, description: finalDescription }),
+              });
+
+              if (!completeRes.ok) {
+                reject(new Error('Video subido a YouTube pero error al registrar en la cola.'));
+              } else {
+                resolve();
+              }
+            } catch {
+              reject(new Error('Error al procesar la respuesta de YouTube.'));
+            }
+          } else {
+            reject(new Error(`Error de YouTube (${xhr.status}). Intenta de nuevo.`));
+          }
+        });
+
+        xhr.addEventListener("error", () => reject(new Error("Error de conexión. Verifica tu internet.")));
+        xhr.addEventListener("abort", () => reject(new Error("Subida cancelada.")));
+
+        xhr.open("PUT", uploadUrl, true);
+        xhr.setRequestHeader("Content-Type", file.type || 'video/mp4');
+        xhr.send(file);
+      });
+
+      setStatus("success");
+      setFile(null);
+      setTitle("");
+      setDescription("");
+      setTermsAccepted(false);
+      setUploadProgress(0);
+
+    } catch (err: any) {
       setStatus("error");
-      setErrorMessage("Error de conexión. Verifica tu internet e inténtalo nuevamente.");
-    });
-
-    xhr.open("POST", "/api/upload", true);
-    xhr.send(formData);
+      setErrorMessage(err.message || "Error desconocido.");
+    }
   };
 
   return (
@@ -140,7 +171,6 @@ export default function UploadForm() {
         </div>
       )}
 
-      {/* Botón Central Gigante si no hay archivo */}
       {!file ? (
         <div 
           className="flex flex-col items-center justify-center w-full min-h-[250px]"
@@ -151,7 +181,7 @@ export default function UploadForm() {
             type="file" 
             ref={fileInputRef} 
             onChange={handleFileChange} 
-            accept="video/mp4,video/quicktime"
+            accept="video/mp4,video/quicktime,video/webm,video/*"
             className="hidden" 
           />
           
@@ -174,16 +204,17 @@ export default function UploadForm() {
 
           <div className="mt-6 text-xs text-gray-400 text-center flex flex-col items-center gap-1">
             <span>Solo videos verticales (9:16)</span>
-            <span>Máximo 59 segundos</span>
+            <span>Máximo 59 segundos · Sin límite de peso</span>
           </div>
         </div>
       ) : (
-        /* Formulario con el archivo ya seleccionado */
         <form onSubmit={handleUpload} className="space-y-6 relative z-10">
           <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex flex-col truncate">
               <span className="font-semibold text-[#0056b3] truncate">{file.name}</span>
-              <span className="text-xs text-gray-500">{(file.size / (1024 * 1024)).toFixed(1)} MB - ✅ Video Vertical y Corto</span>
+              <span className="text-xs text-gray-500">
+                {(file.size / (1024 * 1024)).toFixed(1)} MB · ✅ Video vertical y corto
+              </span>
             </div>
             {status !== "uploading" && (
               <button 
@@ -209,8 +240,7 @@ export default function UploadForm() {
             />
           </div>
 
-          {/* Checkbox de Términos */}
-          <div className="flex items-start gap-3 mt-4">
+          <div className="flex items-start gap-3">
             <input 
               type="checkbox" 
               id="terms" 
@@ -221,30 +251,35 @@ export default function UploadForm() {
               className="mt-1.5 w-4 h-4 text-[#0056b3] rounded border-gray-300 focus:ring-[#0056b3] disabled:opacity-50"
             />
             <label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
-              He leído y acepto los <Link href="/terminos" target="_blank" className="text-[#0056b3] hover:underline font-medium">Términos y Condiciones</Link> para la subida de contenido. Entiendo que el vídeo puede ser publicado públicamente.
+              He leído y acepto los <Link href="/terminos" target="_blank" className="text-[#0056b3] hover:underline font-medium">Términos y Condiciones</Link>. Entiendo que el vídeo puede ser publicado públicamente.
             </label>
           </div>
 
-          {status === "error" && <p className="text-red-500 text-sm font-medium text-center bg-red-50 p-3 rounded-lg">{errorMessage}</p>}
-          {status === "success" && <p className="text-green-600 text-lg font-bold text-center bg-green-50 p-4 rounded-xl border border-green-100 shadow-sm">¡El vídeo se ha subido correctamente a la cola!</p>}
+          {status === "error" && (
+            <p className="text-red-500 text-sm font-medium text-center bg-red-50 p-3 rounded-lg">{errorMessage}</p>
+          )}
+          {status === "success" && (
+            <p className="text-green-600 text-lg font-bold text-center bg-green-50 p-4 rounded-xl border border-green-100 shadow-sm">
+              ¡Vídeo en la cola! El sistema lo publicará automáticamente 🎉
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={!title || !termsAccepted || status === "uploading"}
             className="w-full bg-[#0056b3] hover:bg-[#004494] text-white rounded-xl py-3.5 text-lg font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
           >
-            {/* Barra de progreso de fondo en el botón */}
             {status === "uploading" && (
               <div 
                 className="absolute left-0 top-0 bottom-0 bg-[#003875] transition-all duration-300" 
                 style={{ width: `${uploadProgress}%` }}
               />
             )}
-            
             <span className="relative z-10 flex items-center gap-2">
               {status === "uploading" ? (
                 <>
-                  <Loader2 className="w-6 h-6 animate-spin" /> Subiendo... {uploadProgress}%
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  Subiendo directamente... {uploadProgress}%
                 </>
               ) : (
                 "Confirmar y Enviar"
