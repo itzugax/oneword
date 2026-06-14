@@ -7,14 +7,16 @@ export const maxDuration = 60;
 
 export async function GET(req: Request) {
   try {
-    // Validar token de cron (Header)
+    // Validar token de cron (Header o Query Parameter)
+    const url = new URL(req.url);
+    const querySecret = url.searchParams.get('secret');
     const authHeader = req.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
     
     // Header opcional para saltarse la validación de tiempo (manual desde el admin panel)
     const forceRoulette = req.headers.get('x-force-roulette') === 'true';
 
-    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    if (!cronSecret || (authHeader !== `Bearer ${cronSecret}` && querySecret !== cronSecret)) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
