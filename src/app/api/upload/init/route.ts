@@ -36,6 +36,7 @@ export async function POST(req: Request) {
           'Content-Type': 'application/json',
           'X-Upload-Content-Type': mimeType,
           'X-Upload-Content-Length': String(fileSize),
+          'Origin': req.headers.get('origin') || 'https://ugaxbot.vercel.app',
         },
         body: JSON.stringify({
           snippet: {
