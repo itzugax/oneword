@@ -278,8 +278,10 @@ export default function UploadForm() {
             <span className="relative z-10 flex items-center gap-2">
               {status === "uploading" ? (
                 <>
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                  Subiendo directamente... {uploadProgress}%
+                  <Loader2 className="w-6 h-6 animate-spin shrink-0" />
+                  {uploadProgress === 100 
+                    ? "Procesando en YouTube... (espera un momento)" 
+                    : `Subiendo directamente... ${uploadProgress}%`}
                 </>
               ) : (
                 "Confirmar y Enviar"
